@@ -1,0 +1,37 @@
+# ── Environments ──────────────────────────────────────────────────
+venv/
+.venv/
+env/
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+
+# ── Model Weights (too large for git) ────────────────────────────
+pretrained/
+*.safetensors
+*.bin
+!requirements.txt
+
+# ── Dataset (too large for git) ──────────────────────────────────
+data/
+
+# ── Training Outputs ─────────────────────────────────────────────
+checkpoints/
+logs/
+temp/
+outputs/
+converted_images/
+
+# ── OS / IDE ─────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ── Jupyter ──────────────────────────────────────────────────────
+.ipynb_checkpoints/

@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Local Deepfake Dashboard</title>
+  <style>
+    :root {
+      --bg: #f2f5f9;
+      --panel: #ffffff;
+      --text: #0f172a;
+      --muted: #475569;
+      --accent: #0d9488;
+      --border: #dbe2ea;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(160deg, #eef4fb 0%, #e5f3ef 100%);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    .wrap {
+      max-width: 920px;
+      margin: 32px auto;
+      padding: 0 16px;
+    }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px;
+      margin-bottom: 16px;
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+    }
+    h1 { margin: 0 0 6px; font-size: 24px; }
+    p { margin: 0 0 12px; color: var(--muted); }
+    .row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    input[type="file"], input[type="number"], select {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 10px;
+      background: #fff;
+      min-width: 180px;
+    }
+    button {
+      border: 0;
+      border-radius: 8px;
+      padding: 10px 14px;
+      cursor: pointer;
+      background: var(--accent);
+      color: #fff;
+      font-weight: 600;
+    }
+    button:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+    pre {
+      margin: 10px 0 0;
+      background: #0b1220;
+      color: #dbe9ff;
+      border-radius: 10px;
+      padding: 10px;
+      overflow-x: auto;
+      min-height: 80px;
+    }
+    .mono {
+      font-family: Consolas, Menlo, monospace;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>Local Deepfake Dashboard</h1>
+      <p>This dashboard calls only same-origin localhost API routes.</p>
+      <div class="mono">API base: <span id="apiBase"></span></div>
+    </div>
+
+    <div class="card">
+      <h2>Video Detection</h2>
+      <div class="row">
+        <input id="videoFile" type="file" accept=".mp4,.avi,.mov,.mkv,.webm,.flv">
+        <select id="fusionMethod">
+          <option value="rule_based">rule_based</option>
+          <option value="ml_based">ml_based</option>
+        </select>
+        <label><input id="skipAudio" type="checkbox"> Skip audio</label>
+        <button id="videoBtn">Analyze Video</button>
+      </div>
+      <pre id="videoOut"></pre>
+    </div>
+
+    <div class="card">
+      <h2>Image Detection</h2>
+      <div class="row">
+        <input id="imageFile" type="file" accept=".jpg,.jpeg,.png,.bmp,.webp">
+        <input id="faceConf" type="number" min="0" max="1" step="0.01" placeholder="Face conf (optional)">
+        <button id="imageBtn">Analyze Image</button>
+      </div>
+      <pre id="imageOut"></pre>
+    </div>
+
+    <div class="card">
+      <h2>Health</h2>
+      <button id="healthBtn">Refresh Health</button>
+      <pre id="healthOut"></pre>
+    </div>
+  </div>
+
+  <script>
+    const base = window.location.origin;
+    document.getElementById("apiBase").textContent = base;
+
+    const jsonPretty = (obj) => JSON.stringify(obj, null, 2);
+
+    async function parseResponse(resp) {
+      const body = await resp.json().catch(() => ({}));
+      if (!resp.ok) {
+        throw new Error(jsonPretty(body));
+      }
+      return body;
+    }
+
+    document.getElementById("videoBtn").addEventListener("click", async () => {
+      const out = document.getElementById("videoOut");
+      const fileInput = document.getElementById("videoFile");
+      const file = fileInput.files && fileInput.files[0];
+      if (!file) {
+        out.textContent = "Select a video file first.";
+        return;
+      }
+      const btn = document.getElementById("videoBtn");
+      btn.disabled = true;
+      out.textContent = "Processing...";
+      try {
+        const form = new FormData();
+        form.append("video", file);
+        const fusion = document.getElementById("fusionMethod").value;
+        const skip = document.getElementById("skipAudio").checked;
+        const url = `${base}/predict/video?fusion_method=${encodeURIComponent(fusion)}&skip_audio=${skip}`;
+        const resp = await fetch(url, { method: "POST", body: form });
+        const data = await parseResponse(resp);
+        out.textContent = jsonPretty(data);
+      } catch (err) {
+        out.textContent = String(err);
+      } finally {
+        btn.disabled = false;
+      }
+    });
+
+    document.getElementById("imageBtn").addEventListener("click", async () => {
+      const out = document.getElementById("imageOut");
+      const fileInput = document.getElementById("imageFile");
+      const file = fileInput.files && fileInput.files[0];
+      if (!file) {
+        out.textContent = "Select an image file first.";
+        return;
+      }
+      const btn = document.getElementById("imageBtn");
+      btn.disabled = true;
+      out.textContent = "Processing...";
+      try {
+        const form = new FormData();
+        form.append("image", file);
+        const faceConf = document.getElementById("faceConf").value;
+        const suffix = faceConf ? `?face_confidence=${encodeURIComponent(faceConf)}` : "";
+        const resp = await fetch(`${base}/predict/image${suffix}`, { method: "POST", body: form });
+        const data = await parseResponse(resp);
+        out.textContent = jsonPretty(data);
+      } catch (err) {
+        out.textContent = String(err);
+      } finally {
+        btn.disabled = false;
+      }
+    });
+
+    document.getElementById("healthBtn").addEventListener("click", async () => {
+      const out = document.getElementById("healthOut");
+      out.textContent = "Loading...";
+      try {
+        const resp = await fetch(`${base}/health`);
+        const data = await parseResponse(resp);
+        out.textContent = jsonPretty(data);
+      } catch (err) {
+        out.textContent = String(err);
+      }
+    });
+  </script>
+</body>
+</html>
