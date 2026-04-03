@@ -1,0 +1,49 @@
+{
+  "best_epoch": 8,
+  "selection_metric": "f1",
+  "best_metric_value": 0.33150006043756797,
+  "num_epochs_ran": 8,
+  "train_images": 146905,
+  "val_images": 31428,
+  "test_images": 31483,
+  "split_summary": {
+    "videos": {
+      "train": 4900,
+      "val": 1050,
+      "test": 1050
+    },
+    "images_real": {
+      "train": 21000,
+      "val": 4500,
+      "test": 4500
+    },
+    "images_fake": {
+      "train": 125905,
+      "val": 26928,
+      "test": 26983
+    },
+    "images_total": {
+      "train": 146905,
+      "val": 31428,
+      "test": 31483
+    }
+  },
+  "test_metrics": {
+    "accuracy": 0.306419337420195,
+    "precision": 0.8553085737953886,
+    "recall": 0.22958900048178482,
+    "f1": 0.3620054929001344,
+    "specificity": 0.7671111111111111,
+    "balanced_accuracy": 0.498350055796448,
+    "loss": 1.4689837298693673
+  },
+  "paths": {
+    "run_dir": "training_runs\\vit_optimized",
+    "best_checkpoint": "training_runs\\vit_optimized\\checkpoints\\best.pt",
+    "final_checkpoint": "training_runs\\vit_optimized\\checkpoints\\final.pt",
+    "manifest_csv": "training_runs\\vit_optimized\\samples_manifest.csv",
+    "history_json": "training_runs\\vit_optimized\\history.json",
+    "history_csv": "training_runs\\vit_optimized\\history.csv",
+    "train_log": "training_runs\\vit_optimized\\train.log"
+  }
+}

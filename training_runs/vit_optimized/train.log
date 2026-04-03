@@ -1,0 +1,26 @@
+2026-03-29 16:46:20 | train_vit      | INFO     | Frames root: data\frames
+2026-03-29 16:46:20 | train_vit      | INFO     | Run dir    : training_runs\vit_optimized
+2026-03-29 16:46:49 | train_vit      | INFO     | Manifest built. Train=146905 Val=31428 Test=31483 images.
+2026-03-29 16:46:50 | train_vit      | INFO     | Dataset summary | train=146905 val=31428 test=31483 images
+2026-03-29 16:46:50 | train_vit      | INFO     | Training device: cuda
+2026-03-29 16:46:51 | train_vit      | INFO     | Using class-weighted loss: [3.4977381229400635, 0.5833961963653564]
+2026-03-29 16:46:51 | train_vit      | INFO     | Starting training for 8 epochs
+2026-03-29 17:14:40 | train_vit      | INFO     | Epoch 1/8 | 1669.31s | train_loss=0.4180 train_f1=0.0096 | val_loss=1.5730 val_f1=0.0340 val_acc=0.1580
+2026-03-29 17:14:41 | train_vit      | INFO     | New best checkpoint at epoch 1 (f1=0.034022)
+2026-03-29 17:41:54 | train_vit      | INFO     | Epoch 2/8 | 1631.87s | train_loss=0.4097 train_f1=0.0731 | val_loss=1.5729 val_f1=0.1930 val_acc=0.2342
+2026-03-29 17:42:01 | train_vit      | INFO     | New best checkpoint at epoch 2 (f1=0.193005)
+2026-03-29 18:09:26 | train_vit      | INFO     | Epoch 3/8 | 1633.66s | train_loss=0.3960 train_f1=0.1859 | val_loss=1.5922 val_f1=0.2119 val_acc=0.2440
+2026-03-29 18:09:32 | train_vit      | INFO     | New best checkpoint at epoch 3 (f1=0.211902)
+2026-03-29 18:36:48 | train_vit      | INFO     | Epoch 4/8 | 1632.54s | train_loss=0.3868 train_f1=0.2316 | val_loss=1.5693 val_f1=0.2622 val_acc=0.2693
+2026-03-29 18:36:55 | train_vit      | INFO     | New best checkpoint at epoch 4 (f1=0.262160)
+2026-03-29 19:04:12 | train_vit      | INFO     | Epoch 5/8 | 1635.31s | train_loss=0.3793 train_f1=0.2610 | val_loss=1.4439 val_f1=0.2251 val_acc=0.2482
+2026-03-29 19:31:39 | train_vit      | INFO     | Epoch 6/8 | 1640.07s | train_loss=0.3698 train_f1=0.2904 | val_loss=1.5226 val_f1=0.2809 val_acc=0.2767
+2026-03-29 19:31:46 | train_vit      | INFO     | New best checkpoint at epoch 6 (f1=0.280869)
+2026-03-29 19:59:05 | train_vit      | INFO     | Epoch 7/8 | 1632.20s | train_loss=0.3613 train_f1=0.3232 | val_loss=1.5670 val_f1=0.2975 val_acc=0.2818
+2026-03-29 19:59:12 | train_vit      | INFO     | New best checkpoint at epoch 7 (f1=0.297479)
+2026-03-29 20:26:26 | train_vit      | INFO     | Epoch 8/8 | 1628.60s | train_loss=0.3490 train_f1=0.3553 | val_loss=1.4712 val_f1=0.3315 val_acc=0.2961
+2026-03-29 20:26:32 | train_vit      | INFO     | New best checkpoint at epoch 8 (f1=0.331500)
+2026-03-29 20:28:55 | train_vit      | INFO     | Training complete.
+2026-03-29 20:28:55 | train_vit      | INFO     | Best epoch: 8 | Best f1: 0.331500
+2026-03-29 20:28:55 | train_vit      | INFO     | Test metrics | loss=1.4690 acc=0.3064 precision=0.8553 recall=0.2296 f1=0.3620
+2026-03-29 20:28:55 | train_vit      | INFO     | Artifacts written to: training_runs\vit_optimized

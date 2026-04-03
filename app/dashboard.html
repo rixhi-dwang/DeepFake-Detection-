@@ -1,125 +1,533 @@
-<!doctype html>
+<!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Local Deepfake Dashboard</title>
-  <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Local Deepfake Dashboard</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Lato&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Playpen+Sans+Deva:wght@159&family=Playpen+Sans+Thai:wght@100..800&family=Press+Start+2P&family=Quicksand:wght@300..700&family=Tourney:ital,wght@0,100..900;1,100..900&display=swap');
+  </style>
+<style>
+    
     :root {
-      --bg: #f2f5f9;
-      --panel: #ffffff;
-      --text: #0f172a;
-      --muted: #475569;
-      --accent: #0d9488;
-      --border: #dbe2ea;
+      --bg: #011016;
+      --panel: rgba(5, 4, 12, 0.4);
+      --text: #e0e0e0;
+      --muted: #828282;
+      --accent: #fbffec;
+      --accent-secondary: #e4eacf;
+      --border: rgba(247, 242, 242, 0.3);
+      --glow: 0 0 10px rgba(0, 255, 204, 0.5), 0 0 20px rgba(0, 255, 204, 0.3);
     }
+
     * { box-sizing: border-box; }
+
     body {
       margin: 0;
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(160deg, #eef4fb 0%, #e5f3ef 100%);
+      font-family: 'Rajdhani', sans-serif;
+      background-color: var(--bg);
       color: var(--text);
       min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
     }
+
+    .bg-animation {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      perspective: 1000px;
+      overflow: hidden;
+    }
+
+    .shape {
+      position: absolute;
+      opacity: 0.6;
+      filter: blur(1px);
+      animation: float 20s infinite linear;
+    }
+
+    .shape::after {
+      content: '';
+      display: block;
+      width: 100%;
+      height: 100%;
+      border-radius: inherit;
+      box-shadow: 0 0 20px currentColor;
+    }
+
+    .shape-1 {
+      width: 300px;
+      height: 300px;
+      border: 2px solid var(--accent);
+      color: var(--accent);
+      top: 10%;
+      left: -5%;
+      border-radius: 50%;
+      transform-style: preserve-3d;
+      animation-duration: 25s;
+      animation-delay: 0s;
+    }
+
+    .shape-2 {
+      width: 150px;
+      height: 150px;
+      background: transparent;
+      border: 2px solid var(--accent-secondary);
+      color: var(--accent-secondary);
+      bottom: 15%;
+      right: 5%;
+      transform: rotate(45deg);
+      animation: float-spin 30s infinite linear;
+    }
+
+    .shape-3 {
+      width: 80px;
+      height: 80px;
+      background: transparent;
+      border: 2px solid var(--accent);
+      color: var(--accent);
+      top: 50%;
+      left: 40%;
+      border-radius: 30%;
+      animation: float-rev 18s infinite linear;
+    }
+    
+    .shape-4 {
+        width: 200px;
+        height: 200px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: rgba(255, 255, 255, 0.1);
+        top: 20%;
+        right: 20%;
+        border-radius: 50%;
+        animation: float 22s infinite linear reverse;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0) translateX(0) rotateZ(0deg); }
+      25% { transform: translateY(50px) translateX(100px) rotateZ(90deg); }
+      50% { transform: translateY(100px) translateX(50px) rotateZ(180deg); }
+      75% { transform: translateY(50px) translateX(-50px) rotateZ(270deg); }
+      100% { transform: translateY(0) translateX(0) rotateZ(360deg); }
+    }
+
+    @keyframes float-spin {
+      0% { transform: translateY(0) rotate(0deg) scale(1); }
+      50% { transform: translateY(-100px) rotate(180deg) scale(1.2); }
+      100% { transform: translateY(0) rotate(360deg) scale(1); }
+    }
+
+    @keyframes float-rev {
+      0% { transform: translateX(0) translateY(0); }
+      100% { transform: translateX(-200px) translateY(-200px); }
+    }
+
     .wrap {
-      max-width: 920px;
-      margin: 32px auto;
-      padding: 0 16px;
+      max-width: 1400px;
+      margin: 40px auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 2;
     }
+
     .card {
       background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 18px;
-      margin-bottom: 16px;
-      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+      border: 3px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(12px);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      overflow: hidden;
     }
-    h1 { margin: 0 0 6px; font-size: 24px; }
-    p { margin: 0 0 12px; color: var(--muted); }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: var(--accent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-5px) scale(1.01);
+      border-color: var(--accent);
+      box-shadow: 0 0 25px rgba(0, 255, 204, 0.15);
+    }
+
+    .card:hover::before {
+      opacity: 1;
+    }
+
+    h1 { 
+      margin: 0 0 8px; 
+      font-family: 'Orbitron', sans-serif;
+      font-size: 35px; 
+      background: linear-gradient(90deg, #fff, var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 20px rgba(0, 255, 204, 0.3);
+    }
+    
+    h2 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 26px;
+      color: var(--accent-secondary);
+      margin-top: 0;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    p { margin: 0 0 16px; color: var(--muted); font-size: 1.1rem; }
+    
+    .mono {
+      font-family: 'Consolas', 'Courier New', monospace;
+      color: var(--accent);
+      font-size: 0.8rem;
+      background: rgba(0, 255, 204, 0.05);
+      padding: 4px 8px;
+      border-radius: 4px;
+    }
+
     .row {
       display: flex;
-      gap: 12px;
+      gap: 16px;
       flex-wrap: wrap;
       align-items: center;
     }
+
+    .preview-section {
+      margin-top: 20px;
+      margin-bottom: 20px;
+      padding: 15px;
+      border: 2px dashed var(--border);
+      border-radius: 8px;
+      background: rgba(0, 0, 0, 0.2);
+      min-height: 150px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .preview-section .placeholder {
+      color: var(--muted);
+      font-size: 0.9rem;
+      text-align: center;
+    }
+
+    .preview-section video,
+    .preview-section img {
+      max-width: 100%;
+      max-height: 300px;
+      border-radius: 4px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    }
+
+    /* ADDED: Preview button style */
+    .preview-btn {
+      border: 2px solid var(--accent-secondary);
+      border-radius: 8px;
+      padding: 10px 20px;
+      cursor: pointer;
+      background: transparent;
+      color: var(--accent-secondary);
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s;
+      z-index: 1;
+    }
+
+    .preview-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 0;
+      height: 100%;
+      background: var(--accent-secondary);
+      z-index: -1;
+      transition: width 0.3s;
+    }
+
+    .preview-btn:hover {
+      color: #000;
+      box-shadow: 0 0 15px rgba(228, 234, 207, 0.3);
+    }
+
+    .preview-btn:hover::before {
+      width: 100%;
+    }
+
+    .preview-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+      border-color: var(--muted);
+      color: var(--muted);
+    }
+
+    .preview-btn:disabled::before {
+      display: none;
+    }
+
     input[type="file"], input[type="number"], select {
       border: 1px solid var(--border);
       border-radius: 8px;
-      padding: 8px 10px;
-      background: #fff;
-      min-width: 180px;
-    }
-    button {
-      border: 0;
-      border-radius: 8px;
       padding: 10px 14px;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
+      min-width: 200px;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1rem;
+      transition: all 0.3s;
+    }
+
+    input[type="file"]:hover, input[type="number"]:hover, select:hover,
+    input[type="file"]:focus, input[type="number"]:focus, select:focus {
+      border-color: var(--accent);
+      background: rgba(0, 255, 204, 0.05);
+      outline: none;
+      box-shadow: 0 0 10px rgba(0, 255, 204, 0.2);
+    }
+
+    input[type="file"]::file-selector-button {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      margin-right: 10px;
       cursor: pointer;
-      background: var(--accent);
-      color: #fff;
+      transition: background 0.3s;
+    }
+
+    input[type="file"]::file-selector-button:hover {
+        background: var(--accent);
+        color: #000;
+    }
+
+    label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      color: var(--muted);
+    }
+    
+    input[type="checkbox"] {
+        accent-color: var(--accent);
+        width: 18px;
+        height: 18px;
+    }
+
+    button {
+      border: 2px solid var(--accent);
+      border-radius: 8px;
+      padding: 12px 24px;
+      cursor: pointer;
+      background: transparent;
+      color: var(--accent);
+      font-family: 'Orbitron', sans-serif;
       font-weight: 600;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s;
+      z-index: 1;
     }
+
+    button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 0;
+      height: 100%;
+      background: var(--accent);
+      z-index: -1;
+      transition: width 0.3s;
+    }
+
+    button:hover {
+      color: #000;
+      box-shadow: var(--glow);
+    }
+
+    button:hover::before {
+      width: 100%;
+    }
+
     button:disabled {
-      opacity: 0.7;
+      opacity: 0.5;
       cursor: not-allowed;
+      border-color: var(--muted);
+      color: var(--muted);
     }
+
+    button:disabled::before {
+      display: none;
+    }
+
     pre {
-      margin: 10px 0 0;
-      background: #0b1220;
-      color: #dbe9ff;
-      border-radius: 10px;
-      padding: 10px;
+      margin: 16px 0 0;
+      background: #000;
+      color: #00ffcc;
+      border-radius: 8px;
+      padding: 16px;
       overflow-x: auto;
       min-height: 80px;
-    }
-    .mono {
-      font-family: Consolas, Menlo, monospace;
+      font-family: 'Consolas', monospace;
+      border: 1px solid #111;
+      box-shadow: inset 0 0 20px rgba(0, 255, 204, 0.05);
     }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="card">
-      <h1>Local Deepfake Dashboard</h1>
-      <p>This dashboard calls only same-origin localhost API routes.</p>
-      <div class="mono">API base: <span id="apiBase"></span></div>
-    </div>
-
-    <div class="card">
-      <h2>Video Detection</h2>
-      <div class="row">
-        <input id="videoFile" type="file" accept=".mp4,.avi,.mov,.mkv,.webm,.flv">
-        <select id="fusionMethod">
-          <option value="rule_based">rule_based</option>
-          <option value="ml_based">ml_based</option>
-        </select>
-        <label><input id="skipAudio" type="checkbox"> Skip audio</label>
-        <button id="videoBtn">Analyze Video</button>
-      </div>
-      <pre id="videoOut"></pre>
-    </div>
-
-    <div class="card">
-      <h2>Image Detection</h2>
-      <div class="row">
-        <input id="imageFile" type="file" accept=".jpg,.jpeg,.png,.bmp,.webp">
-        <input id="faceConf" type="number" min="0" max="1" step="0.01" placeholder="Face conf (optional)">
-        <button id="imageBtn">Analyze Image</button>
-      </div>
-      <pre id="imageOut"></pre>
-    </div>
-
-    <div class="card">
-      <h2>Health</h2>
-      <button id="healthBtn">Refresh Health</button>
-      <pre id="healthOut"></pre>
-    </div>
-  </div>
-
-  <script>
-    const base = window.location.origin;
+<div class="bg-animation">
+<div class="shape shape-1"></div>
+<div class="shape shape-2"></div>
+<div class="shape shape-3"></div>
+<div class="shape shape-4"></div>
+</div>
+<div class="wrap">
+<div class="card">
+<h1>Local Deepfake Dashboard</h1>
+<p>This dashboard calls only same-origin localhost API routes.</p>
+<div class="mono">API base: <span id="apiBase"></span></div>
+</div>
+<div class="card">
+<h2>Video Detection</h2>
+<div class="row">
+<input accept=".mp4,.avi,.mov,.mkv,.webm,.flv" id="videoFile" type="file"/>
+<select id="fusionMethod">
+<option value="rule_based">rule_based</option>
+<option value="ml_based">ml_based</option>
+</select>
+<label><input id="skipAudio" type="checkbox"/> Skip audio</label>
+<button id="videoBtn">Analyze Video</button>
+</div>
+<div class="preview-section" id="videoPreviewBox">
+<button class="preview-btn" disabled="" id="videoPreviewBtn">Preview Video</button>
+</div>
+<pre id="videoOut"></pre>
+</div>
+<div class="card">
+<h2>Image Detection</h2>
+<div class="row">
+<input accept=".jpg,.jpeg,.png,.bmp,.webp" id="imageFile" type="file"/>
+<input id="faceConf" max="1" min="0" placeholder="Face conf (optional)" step="0.01" type="number"/>
+<button id="imageBtn">Analyze Image</button>
+</div>
+<div class="preview-section" id="imagePreviewBox">
+<button class="preview-btn" disabled="" id="imagePreviewBtn">Preview Image</button>
+</div>
+<pre id="imageOut"></pre>
+</div>
+<div class="card">
+<h2>System Status</h2>
+<div class="row">
+<button id="healthBtn">Refresh Health</button>
+</div>
+<pre id="healthOut"></pre>
+</div>
+</div>
+<script>const base = window.location.origin;
     document.getElementById("apiBase").textContent = base;
 
     const jsonPretty = (obj) => JSON.stringify(obj, null, 2);
+    const fmtPercent = (value) =>
+      (typeof value === "number" && Number.isFinite(value)) ? `${(value * 100).toFixed(2)}%` : "N/A";
+    const fmtSeconds = (value) =>
+      (typeof value === "number" && Number.isFinite(value)) ? `${value.toFixed(3)}s` : "N/A";
+
+    function humanLabel(label) {
+      if (label === "REAL") return "Likely Real";
+      if (label === "FAKE") return "Likely Fake";
+      return "Unknown";
+    }
+
+    function formatApiError(err) {
+      const raw = (err && err.message) ? err.message : String(err);
+      try {
+        const parsed = JSON.parse(raw);
+        if (parsed && typeof parsed === "object") {
+          if (typeof parsed.detail === "string") {
+            return `Request failed: ${parsed.detail}`;
+          }
+          if (Array.isArray(parsed.detail)) {
+            return `Request failed: ${parsed.detail.map((item) => item.msg || JSON.stringify(item)).join(", ")}`;
+          }
+        }
+      } catch (_) {
+        // not JSON, fall through
+      }
+      return raw.replace(/^Error:\s*/, "");
+    }
+
+    function formatImageResult(data) {
+      const image = data?.image ?? {};
+      const prediction = image?.prediction ?? {};
+      const timing = image?.timing ?? {};
+
+      const lines = [
+        "Image Analysis Result",
+        "---------------------",
+        `File: ${data?.filename ?? "Unknown"}`,
+        `Status: ${image?.status ?? "Unknown"}`,
+        `Face detected: ${
+          image?.face_detected === true
+            ? "Yes"
+            : image?.face_detected === false
+              ? "No"
+              : "Unknown"
+        }`,
+      ];
+
+      if (prediction?.label) {
+        lines.push(`Verdict: ${humanLabel(prediction.label)} (${prediction.label})`);
+      }
+      lines.push(`Confidence: ${fmtPercent(prediction?.confidence)}`);
+      lines.push(`Real probability: ${fmtPercent(prediction?.real_probability)}`);
+      lines.push(`Fake probability: ${fmtPercent(prediction?.fake_probability)}`);
+
+      if (timing?.face_detection !== undefined) {
+        lines.push(`Face detection time: ${fmtSeconds(timing.face_detection)}`);
+      }
+      if (timing?.model_inference !== undefined) {
+        lines.push(`Model inference time: ${fmtSeconds(timing.model_inference)}`);
+      }
+      if (timing?.total !== undefined) {
+        lines.push(`Pipeline time: ${fmtSeconds(timing.total)}`);
+      }
+      lines.push(`Total processing time: ${fmtSeconds(data?.total_processing_time)}`);
+
+      if (image?.error) {
+        lines.push(`Error: ${image.error}`);
+      }
+
+      return lines.join("\n");
+    }
 
     async function parseResponse(resp) {
       const body = await resp.json().catch(() => ({}));
@@ -129,10 +537,94 @@
       return body;
     }
 
+    // Store file references and object URLs for memory management
+    let selectedVideoFile = null;
+    let selectedImageFile = null;
+    let currentVideoUrl = null;
+    let currentImageUrl = null;
+
+    const videoPreviewBtn = document.getElementById("videoPreviewBtn");
+    const videoPreviewBox = document.getElementById("videoPreviewBox");
+    const imagePreviewBtn = document.getElementById("imagePreviewBtn");
+    const imagePreviewBox = document.getElementById("imagePreviewBox");
+
+    // Helper to clear preview area while keeping the button
+    function resetPreviewArea(box, btn) {
+      // Remove any existing video or img elements
+      const media = box.querySelector('video, img');
+      if (media) media.remove();
+      btn.style.display = 'block';
+      btn.disabled = true;
+    }
+
+    // Video file selection
+    document.getElementById("videoFile").addEventListener("change", function(e) {
+      const file = e.target.files[0];
+      resetPreviewArea(videoPreviewBox, videoPreviewBtn);
+      
+      if (file) {
+        selectedVideoFile = file;
+        videoPreviewBtn.disabled = false;
+      } else {
+        selectedVideoFile = null;
+      }
+    });
+
+    // Image file selection
+    document.getElementById("imageFile").addEventListener("change", function(e) {
+      const file = e.target.files[0];
+      resetPreviewArea(imagePreviewBox, imagePreviewBtn);
+      
+      if (file) {
+        selectedImageFile = file;
+        imagePreviewBtn.disabled = false;
+      } else {
+        selectedImageFile = null;
+      }
+    });
+
+    // Show video preview
+    function showVideoPreview() {
+      if (selectedVideoFile) {
+        if (currentVideoUrl) URL.revokeObjectURL(currentVideoUrl);
+        currentVideoUrl = URL.createObjectURL(selectedVideoFile);
+        
+        const video = document.createElement('video');
+        video.controls = true;
+        video.autoplay = true;
+        video.muted = true;
+        video.loop = true;
+        const source = document.createElement('source');
+        source.src = currentVideoUrl;
+        source.type = selectedVideoFile.type;
+        video.appendChild(source);
+        
+        videoPreviewBtn.style.display = 'none';
+        videoPreviewBox.appendChild(video);
+      }
+    }
+
+    // Show image preview
+    function showImagePreview() {
+      if (selectedImageFile) {
+        if (currentImageUrl) URL.revokeObjectURL(currentImageUrl);
+        currentImageUrl = URL.createObjectURL(selectedImageFile);
+        
+        const img = document.createElement('img');
+        img.src = currentImageUrl;
+        img.alt = "Image Preview";
+        
+        imagePreviewBtn.style.display = 'none';
+        imagePreviewBox.appendChild(img);
+      }
+    }
+
+    videoPreviewBtn.addEventListener("click", showVideoPreview);
+    imagePreviewBtn.addEventListener("click", showImagePreview);
+
     document.getElementById("videoBtn").addEventListener("click", async () => {
       const out = document.getElementById("videoOut");
-      const fileInput = document.getElementById("videoFile");
-      const file = fileInput.files && fileInput.files[0];
+      const file = selectedVideoFile;
       if (!file) {
         out.textContent = "Select a video file first.";
         return;
@@ -150,7 +642,7 @@
         const data = await parseResponse(resp);
         out.textContent = jsonPretty(data);
       } catch (err) {
-        out.textContent = String(err);
+        out.textContent = formatApiError(err);
       } finally {
         btn.disabled = false;
       }
@@ -158,8 +650,7 @@
 
     document.getElementById("imageBtn").addEventListener("click", async () => {
       const out = document.getElementById("imageOut");
-      const fileInput = document.getElementById("imageFile");
-      const file = fileInput.files && fileInput.files[0];
+      const file = selectedImageFile;
       if (!file) {
         out.textContent = "Select an image file first.";
         return;
@@ -174,9 +665,9 @@
         const suffix = faceConf ? `?face_confidence=${encodeURIComponent(faceConf)}` : "";
         const resp = await fetch(`${base}/predict/image${suffix}`, { method: "POST", body: form });
         const data = await parseResponse(resp);
-        out.textContent = jsonPretty(data);
+        out.textContent = formatImageResult(data);
       } catch (err) {
-        out.textContent = String(err);
+        out.textContent = formatApiError(err);
       } finally {
         btn.disabled = false;
       }
@@ -190,9 +681,8 @@
         const data = await parseResponse(resp);
         out.textContent = jsonPretty(data);
       } catch (err) {
-        out.textContent = String(err);
+        out.textContent = formatApiError(err);
       }
-    });
-  </script>
+    });</script>
 </body>
 </html>

@@ -15,7 +15,7 @@ from typing import Optional
 
 from fastapi import FastAPI, File, HTTPException, Query, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse, JSONResponse, PlainTextResponse
+from fastapi.responses import HTMLResponse, JSONResponse, PlainTextResponse, RedirectResponse
 
 import sys
 
@@ -76,10 +76,16 @@ def _load_dashboard_html() -> str:
 
 @app.get("/", include_in_schema=False)
 async def root():
+    return RedirectResponse(url="/dashboard", status_code=307)
+
+
+@app.get("/api", include_in_schema=False)
+async def api_root():
     return {
         "name": "Local Deepfake Detection API",
         "dashboard": "/dashboard",
         "docs": "/docs",
+        "health": "/health",
     }
 
 

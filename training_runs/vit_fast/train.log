@@ -1,0 +1,7 @@
+2026-03-29 16:38:57 | train_vit      | INFO     | Frames root: data\frames
+2026-03-29 16:38:57 | train_vit      | INFO     | Run dir    : training_runs\vit_fast
+2026-03-29 16:40:59 | train_vit      | INFO     | Manifest built. Train=195832 Val=41898 Test=41973 images.
+2026-03-29 16:41:02 | train_vit      | INFO     | Dataset summary | train=195832 val=41898 test=41973 images
+2026-03-29 16:41:02 | train_vit      | INFO     | Training device: cuda
+2026-03-29 16:41:04 | train_vit      | INFO     | Using class-weighted loss: [3.496999979019165, 0.583416759967804]
+2026-03-29 16:41:04 | train_vit      | INFO     | Starting training for 10 epochs

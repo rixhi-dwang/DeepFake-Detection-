@@ -1,0 +1,22 @@
+{
+  "videos": {
+    "train": 4900,
+    "val": 1050,
+    "test": 1050
+  },
+  "images_real": {
+    "train": 21000,
+    "val": 4500,
+    "test": 4500
+  },
+  "images_fake": {
+    "train": 125905,
+    "val": 26928,
+    "test": 26983
+  },
+  "images_total": {
+    "train": 146905,
+    "val": 31428,
+    "test": 31483
+  }
+}

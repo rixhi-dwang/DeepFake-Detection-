@@ -1,0 +1,21 @@
+2026-03-21 15:17:26 | train_vit      | INFO     | Frames root: data\frames
+2026-03-21 15:17:26 | train_vit      | INFO     | Run dir    : training_runs\vit_stage1
+2026-03-21 15:19:50 | train_vit      | INFO     | Manifest built. Train=195832 Val=41898 Test=41973 images.
+2026-03-21 15:19:53 | train_vit      | INFO     | Dataset summary | train=195832 val=41898 test=41973 images
+2026-03-21 15:19:53 | train_vit      | INFO     | Training device: cuda
+2026-03-21 15:25:15 | train_vit      | INFO     | Using class-weighted loss: [3.496999979019165, 0.583416759967804]
+2026-03-21 15:25:15 | train_vit      | INFO     | Starting training for 10 epochs
+2026-03-21 16:20:18 | train_vit      | INFO     | Epoch 1/10 | 3303.54s | train_loss=0.4276 train_f1=0.0361 | val_loss=1.7896 val_f1=0.0053 val_acc=0.1455
+2026-03-21 16:20:21 | train_vit      | INFO     | New best checkpoint at epoch 1 (f1=0.005279)
+2026-03-21 17:20:22 | train_vit      | INFO     | Epoch 2/10 | 3598.05s | train_loss=0.4139 train_f1=0.1275 | val_loss=1.6159 val_f1=0.1079 val_acc=0.1921
+2026-03-21 17:20:29 | train_vit      | INFO     | New best checkpoint at epoch 2 (f1=0.107893)
+2026-03-21 18:13:20 | train_vit      | INFO     | Epoch 3/10 | 3165.01s | train_loss=0.4053 train_f1=0.1963 | val_loss=1.2420 val_f1=0.3540 val_acc=0.3148
+2026-03-21 18:13:24 | train_vit      | INFO     | New best checkpoint at epoch 3 (f1=0.354019)
+2026-03-21 19:05:20 | train_vit      | INFO     | Epoch 4/10 | 3109.45s | train_loss=0.3952 train_f1=0.2332 | val_loss=1.3263 val_f1=0.2470 val_acc=0.2624
+2026-03-21 19:55:52 | train_vit      | INFO     | Epoch 5/10 | 3024.30s | train_loss=0.3894 train_f1=0.2584 | val_loss=1.2930 val_f1=0.2415 val_acc=0.2598
+2026-03-21 20:46:39 | train_vit      | INFO     | Epoch 6/10 | 3040.61s | train_loss=0.3793 train_f1=0.2731 | val_loss=1.3934 val_f1=0.2978 val_acc=0.2849
+2026-03-21 20:46:45 | train_vit      | INFO     | Early stopping triggered after 3 epochs without improvement.
+2026-03-21 20:51:28 | train_vit      | INFO     | Training complete.
+2026-03-21 20:51:28 | train_vit      | INFO     | Best epoch: 3 | Best f1: 0.354019
+2026-03-21 20:51:28 | train_vit      | INFO     | Test metrics | loss=1.2016 acc=0.3432 precision=0.9148 recall=0.2576 f1=0.4020
+2026-03-21 20:51:28 | train_vit      | INFO     | Artifacts written to: training_runs\vit_stage1
