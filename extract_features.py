@@ -81,7 +81,7 @@ def create_loader(samples: List, args: argparse.Namespace) -> DataLoader:
     )
 
 
-def extract_and_save_features(
+'''def extract_and_save_features(
     model,
     loader: DataLoader,
     device: torch.device,
@@ -126,6 +126,79 @@ def extract_and_save_features(
         encoding="utf-8",
     )
 
+    print(f"Saved features: {x_path} | shape={X.shape}")
+    print(f"Saved labels  : {y_path} | shape={y.shape}")'''
+
+def extract_and_save_features(
+    model,
+    loader: DataLoader,
+    device: torch.device,
+    output_dir: Path,
+    split: str,
+) -> None:
+    import numpy as np
+
+    all_features = []
+    all_labels = []
+
+    model.eval()
+
+    with torch.no_grad():
+        for images, labels in tqdm(loader, desc="Extracting features"):
+            images = images.to(device, non_blocking=True)
+
+            # ✅ Ensure model has get_features
+            if not hasattr(model, "get_features"):
+                raise AttributeError("Model must implement 'get_features()' method.")
+
+            features = model.get_features(images)
+
+            # ✅ Safety checks
+            if features is None:
+                raise RuntimeError("Model returned None features.")
+
+            if isinstance(features, tuple):
+                features = features[0]
+
+            # ✅ Ensure 2D shape (batch_size, feature_dim)
+            if features.dim() > 2:
+                features = features.view(features.size(0), -1)
+
+            all_features.append(features.detach().cpu().numpy().astype(np.float32))
+            all_labels.append(labels.detach().cpu().numpy().astype(np.int64))
+
+    if len(all_features) == 0:
+        raise RuntimeError("No features extracted.")
+
+    # ✅ Concatenate safely
+    X = np.concatenate(all_features, axis=0)
+    y = np.concatenate(all_labels, axis=0)
+
+    # ✅ Final validation
+    if X.shape[0] != y.shape[0]:
+        raise RuntimeError(f"Mismatch: X={X.shape}, y={y.shape}")
+
+    # ✅ Create output directory
+    ensure_dir(output_dir)
+
+    x_path = output_dir / "X.npy"
+    y_path = output_dir / "y.npy"
+    meta_path = output_dir / "meta.json"
+
+    np.save(x_path, X)
+    np.save(y_path, y)
+
+    meta = {
+        "split": split,
+        "num_samples": int(y.shape[0]),
+        "feature_dim": int(X.shape[1]),
+        "x_path": str(x_path),
+        "y_path": str(y_path),
+    }
+
+    meta_path.write_text(json.dumps(meta, indent=2), encoding="utf-8")
+
+    print(f"\n✅ Feature extraction complete")
     print(f"Saved features: {x_path} | shape={X.shape}")
     print(f"Saved labels  : {y_path} | shape={y.shape}")
 
